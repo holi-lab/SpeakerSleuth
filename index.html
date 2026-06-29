@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="SpeakerSleuth: Can Large Audio-Language Models Judge Speaker Consistency across Multi-turn Dialogues?">
+  <meta name="description" content="SpeakerSleuth is a benchmark testing whether large audio-language models can judge speaker consistency across multi-turn dialogues, revealing a text-over-acoustics bias.">
+  <meta name="keywords" content="SpeakerSleuth, large audio-language models, LALM, speaker consistency, speech evaluation, multi-turn dialogue, benchmark, ACL 2026">
+  <meta name="author" content="Jonggeun Lee, Junseong Pyo, Gyuhyeon Seo, Yohan Jo">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="HOLI Lab, Seoul National University">
+  <meta property="og:title" content="SpeakerSleuth: Can Large Audio-Language Models Judge Speaker Consistency across Multi-turn Dialogues?">
+  <meta property="og:description" content="A benchmark testing whether large audio-language models can judge speaker consistency across multi-turn dialogues, revealing a text-over-acoustics bias.">
+  <!-- TODO: confirm final hosting URL (default assumes GitHub Pages from holi-lab/SpeakerSleuth) -->
+  <meta property="og:url" content="https://holi-lab.github.io/SpeakerSleuth/">
+  <meta property="og:image" content="https://holi-lab.github.io/SpeakerSleuth/static/images/sp_summary.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Overview of the SpeakerSleuth benchmark">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SpeakerSleuth: Can Large Audio-Language Models Judge Speaker Consistency across Multi-turn Dialogues?">
+  <meta name="twitter:description" content="A benchmark testing whether large audio-language models can judge speaker consistency across multi-turn dialogues, revealing a text-over-acoustics bias.">
+  <meta name="twitter:image" content="https://holi-lab.github.io/SpeakerSleuth/static/images/sp_summary.png">
+  <meta name="twitter:image:alt" content="Overview of the SpeakerSleuth benchmark">
+
+  <!-- Academic/Research Specific -->
+  <meta name="citation_title" content="SpeakerSleuth: Can Large Audio-Language Models Judge Speaker Consistency across Multi-turn Dialogues?">
+  <meta name="citation_author" content="Lee, Jonggeun">
+  <meta name="citation_author" content="Pyo, Junseong">
+  <meta name="citation_author" content="Seo, Gyuhyeon">
+  <meta name="citation_author" content="Jo, Yohan">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (ACL 2026), Volume 1: Long Papers">
+  <meta name="citation_firstpage" content="20612">
+  <meta name="citation_lastpage" content="20636">
+  <meta name="citation_pdf_url" content="https://aclanthology.org/2026.acl-long.944.pdf">
+
+  <!-- Additional SEO -->
+  <meta name="theme-color" content="#2563eb">
+  <meta name="msapplication-TileColor" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <title>SpeakerSleuth: Can LALMs Judge Speaker Consistency across Multi-turn Dialogues?</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="static/images/favicon.png">
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="apple-touch-icon" href="static/images/favicon.png">
+
+  <!-- Critical CSS - Load synchronously -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <!-- Non-critical CSS - Load asynchronously -->
+  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+  <noscript>
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Defer non-critical JavaScript -->
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "SpeakerSleuth: Can Large Audio-Language Models Judge Speaker Consistency across Multi-turn Dialogues?",
+    "description": "A benchmark testing whether large audio-language models can judge speaker consistency across multi-turn dialogues, revealing a text-over-acoustics bias.",
+    "author": [
+      { "@type": "Person", "name": "Jonggeun Lee", "affiliation": { "@type": "Organization", "name": "Seoul National University" } },
+      { "@type": "Person", "name": "Junseong Pyo", "affiliation": { "@type": "Organization", "name": "Hanyang University" } },
+      { "@type": "Person", "name": "Gyuhyeon Seo", "affiliation": { "@type": "Organization", "name": "Seoul National University" } },
+      { "@type": "Person", "name": "Yohan Jo", "affiliation": { "@type": "Organization", "name": "Seoul National University" } }
+    ],
+    "datePublished": "2026-07-01",
+    "publisher": { "@type": "Organization", "name": "Association for Computational Linguistics (ACL 2026)" },
+    "url": "https://holi-lab.github.io/SpeakerSleuth/",
+    "image": "https://holi-lab.github.io/SpeakerSleuth/static/images/sp_summary.png",
+    "keywords": ["large audio-language models", "speaker consistency", "speech evaluation", "multi-turn dialogue", "benchmark"],
+    "isAccessibleForFree": true,
+    "license": "https://creativecommons.org/licenses/by/4.0/"
+  }
+  </script>
+
+  <!-- Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "HOLI Lab, Seoul National University",
+    "url": "https://github.com/holi-lab",
+    "sameAs": ["https://github.com/holi-lab"]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">SpeakerSleuth: Can Large Audio-Language Models Judge Speaker Consistency across Multi-turn Dialogues?</h1>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><a href="https://jonggeun-lee.github.io/" target="_blank">Jonggeun Lee</a>,</span>
+              <span class="author-block"><a href="https://junseongpyo.github.io" target="_blank">Junseong Pyo</a><sup>&sect;</sup>,</span>
+              <span class="author-block">Gyuhyeon Seo,</span>
+              <span class="author-block"><a href="https://yohanjo.github.io/" target="_blank">Yohan Jo</a><sup>&dagger;</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">Graduate School of Data Science, Seoul National University</span>
+              <br>
+              <span class="author-block"><strong>ACL 2026 (Main)</strong></span>
+              <span class="eql-cntrb"><small><br><sup>&sect;</sup>Visiting intern from Hanyang University&nbsp;&nbsp;<sup>&dagger;</sup>Corresponding author</small></span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- Paper (ACL Anthology) -->
+                <span class="link-block">
+                  <a href="https://aclanthology.org/2026.acl-long.944/" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper</span>
+                </a>
+              </span>
+
+              <!-- Code -->
+              <span class="link-block">
+                <a href="https://github.com/holi-lab/SpeakerSleuth" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fab fa-github"></i></span>
+                <span>Code &amp; Data</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Teaser figure -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <!-- TODO: replace static/images/sp_summary.png with Figure 1 (overview) -->
+      <img src="static/images/sp_summary.png" alt="Overview of the SpeakerSleuth benchmark" style="max-width:600px;width:100%;height:auto;display:block;margin:0 auto;"/>
+      <h2 class="subtitle has-text-centered" style="margin-top:2rem;">
+        <strong>SpeakerSleuth</strong> decomposes speaker-consistency judgment into three tasks that mirror a real
+        quality-control workflow: Detect, then Localize, then Discriminate.
+      </h2>
+    </div>
+  </div>
+</section>
+<!-- End teaser figure -->
+
+
+<!-- Abstract -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Large Audio-Language Models (LALMs) as judges have emerged as a prominent approach for evaluating speech
+            generation quality, yet their ability to assess speaker consistency across multi-turn dialogues remains
+            unexplored. We present <strong>SpeakerSleuth</strong>, a benchmark evaluating whether LALMs can reliably
+            judge speaker consistency across multi-turn dialogues through three tasks reflecting real-world requirements.
+            We construct 1,818 human-verified evaluation instances across four diverse datasets spanning synthetic and
+            real speech, with controlled acoustic difficulty. Evaluating twelve widely-used LALMs, we find that models
+            struggle to reliably detect acoustic inconsistencies. For instance, given audio samples of the same
+            speaker's turns, some models overpredict inconsistency, whereas others are overly lenient. Models further
+            struggle to identify the exact turns that are problematic. When other interlocutors' turns are provided as
+            textual context, performance degrades dramatically as models prioritize textual coherence over acoustic
+            cues, failing to detect even obvious gender switches for a speaker. On the other hand, models perform
+            substantially better in comparing and ranking acoustic variants, demonstrating inherent acoustic
+            discrimination capabilities. These findings expose a significant bias in LALMs: they tend to prioritize text
+            over acoustics, revealing fundamental modality imbalances that need to be addressed to build reliable
+            audio-language judges.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End abstract -->
+
+
+<!-- Benchmark / Tasks -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="has-text-centered">
+      <h2 class="title is-3">The Benchmark</h2>
+    </div>
+    <div class="content has-text-justified" style="max-width:840px;margin:0 auto 1.6rem;">
+      <p>
+        SpeakerSleuth is built from <strong>1,358 speaker sources</strong> and <strong>3,683 dialogue sources</strong>,
+        yielding <strong>1,818 human-verified instances</strong> across four datasets spanning synthetic and real speech
+        with controlled acoustic difficulty, and evaluates <strong>twelve widely-used LALMs</strong>. It is organized
+        around three tasks that mirror what real speech-generation systems must get right.
+      </p>
+    </div>
+
+    <div class="columns is-centered" style="margin-bottom:1.5rem;">
+      <div class="column is-one-third">
+        <div style="background:#fff;border:1px solid #e6e6e6;border-radius:10px;padding:1.3rem;height:100%;">
+          <h3 class="title is-5" style="margin-bottom:.4rem;">1. Detection</h3>
+          <p>Decide whether a dialogue contains any speaker inconsistency.</p>
+        </div>
+      </div>
+      <div class="column is-one-third">
+        <div style="background:#fff;border:1px solid #e6e6e6;border-radius:10px;padding:1.3rem;height:100%;">
+          <h3 class="title is-5" style="margin-bottom:.4rem;">2. Localization</h3>
+          <p>Pinpoint which specific turns are inconsistent with the target speaker.</p>
+        </div>
+      </div>
+      <div class="column is-one-third">
+        <div style="background:#fff;border:1px solid #e6e6e6;border-radius:10px;padding:1.3rem;height:100%;">
+          <h3 class="title is-5" style="margin-bottom:.4rem;">3. Discrimination</h3>
+          <p>Compare and rank multiple acoustic variants by speaker consistency.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TODO: replace static/images/sp_main.png with the construction pipeline / overview figure -->
+    <img src="static/images/sp_main.png" alt="SpeakerSleuth construction pipeline" style="width:100%;height:auto;"/>
+    <p class="has-text-centered" style="font-size:0.85rem;color:#777;margin:0.7rem 0 0;">
+      Benchmark construction: (1) collect speakers and dialogues, (2) generate consistent and inconsistent scenarios via voice conversion, and (3) verify with text- and audio-based filtering.
+    </p>
+  </div>
+</section>
+<!-- End benchmark -->
+
+
+<!-- Results -->
+<section class="section hero is-light">
+  <div class="container is-max-widescreen">
+    <div class="has-text-centered">
+      <h2 class="title is-3">Results</h2>
+    </div>
+    <div class="content has-text-justified" style="max-width:860px;margin:0 auto 1.6rem;">
+      <p>
+        We evaluate twelve widely-used LALMs alongside speaker-embedding baselines across all three tasks. Models do
+        markedly better at <strong>Discrimination</strong>, comparing and ranking acoustic variants, which shows they
+        possess real acoustic ability. Yet they struggle at <strong>Detection</strong> and <strong>Localization</strong>:
+        they tend to accept speakers as consistent and fail to flag or pinpoint inconsistencies, and even the best models remain far from reliable across all three tasks.
+      </p>
+    </div>
+    <a href="static/images/sp_results_hq.png" target="_blank">
+      <img src="static/images/sp_results_hq.png" alt="Main results across Detection, Localization, and Discrimination"
+           style="width:100%;height:auto;border:1px solid #e6e6e6;border-radius:6px;background:#fff;"/>
+    </a>
+    <p class="has-text-centered" style="font-size:0.85rem;color:#777;margin:0.7rem 0 0;">
+      Main results for LALMs and speaker-embedding methods across the three tasks. (Click to enlarge.)
+    </p>
+
+    <div class="has-text-centered" style="margin-top:3.8rem; margin-bottom:1.6rem;">
+      <h3 class="title is-4">Can models actually hear inconsistencies?</h3>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-two-thirds">
+        <div class="content has-text-justified" style="margin-bottom:1.3rem;">
+          <p>
+            A trustworthy judge must be accurate on both consistent audio (S1) and inconsistent audio (S2/S3), so we plot
+            one against the other. If models truly heard speaker mismatches, the points would cluster near the diagonal.
+            Instead many sit far from it: some accept almost everything as consistent, while others flag inconsistency too
+            often. Models sense that something is off but cannot reliably separate consistent from inconsistent speech.
+          </p>
+        </div>
+        <img src="static/images/sp_detection.png" alt="Detection: consistent (S1) vs inconsistent (S2/S3) accuracy" style="width:100%;height:auto;"/>
+      </div>
+    </div>
+
+    <div class="has-text-centered" style="margin-top:3.8rem; margin-bottom:1.6rem;">
+      <h3 class="title is-4">Does adding dialogue text help?</h3>
+    </div>
+    <div class="content has-text-justified" style="max-width:900px;margin:0 auto 1.3rem;">
+      <p>
+        Until now the model heard only audio, just the target speaker's turns. However, unlike embedding-based methods,
+        LALMs can take audio and text together. So we keep those turns as audio but additionally give the other
+        speakers' turns as text. The intuition is that supplying the conversational context as text should free the
+        model to focus on the audio purely for judging the target's voice, rather than having to infer that context
+        from the audio itself. And since every dialogue was filtered to read coherently, the text gives no hint of
+        inconsistency. The result is the opposite: adding text sharply raises accuracy on consistent dialogues (S1)
+        but collapses it on inconsistent ones (S2 and S3). The model defaults to "consistent" whenever the
+        conversation reads naturally, missing even obvious gender switches. Text overrides acoustics, a real modality
+        imbalance.
+      </p>
+    </div>
+    <a href="static/images/sp_textual.png" target="_blank" style="display:block;">
+      <img src="static/images/sp_textual.png" alt="Impact of textual context on Localization F1 across scenarios S1, S2, S3"
+           style="max-width:780px;width:100%;height:auto;display:block;margin:0 auto;border:1px solid #e6e6e6;border-radius:6px;background:#fff;"/>
+    </a>
+    <p class="has-text-centered" style="font-size:0.85rem;color:#777;margin:0.7rem 0 0;">
+      Impact of adding the other speakers' turns as text, on Localization F1. Context (+C) sharply raises S1 but collapses S2 and S3 (the &Delta; columns). (Click to enlarge.)
+    </p>
+
+    <div class="has-text-centered" style="margin-top:3.8rem; margin-bottom:1.6rem;">
+      <h3 class="title is-4">How much audio is enough?</h3>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <div class="content has-text-justified" style="margin-bottom:1.3rem;">
+          <p>
+            Finally, we vary how much audio the model hears, by clip duration and by dialogue length (5 vs 10 turns).
+            Accuracy rises steadily with longer clips and drops for longer dialogues, so models need enough acoustic
+            evidence per turn and degrade as more turns must be tracked at once.
+          </p>
+        </div>
+        <img src="static/images/sp_duration.png" alt="Detection accuracy and localization F1 by clip duration, 5-turn vs 10-turn" style="width:100%;height:auto;"/>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End results -->
+
+
+<!-- Poster -->
+<section class="section">
+  <div class="container is-max-desktop content">
+    <h2 class="title is-3 has-text-centered">Poster</h2>
+    <p class="has-text-centered" style="margin-bottom:1.25rem;">
+      <a href="static/pdfs/poster.pdf" target="_blank" class="external-link button is-normal is-rounded is-dark">
+        <span class="icon"><i class="fas fa-file-pdf"></i></span>
+        <span>Download Poster (PDF)</span>
+      </a>
+    </p>
+    <iframe src="static/pdfs/poster.pdf" width="100%" height="900" style="border:1px solid #ddd;border-radius:6px;"></iframe>
+  </div>
+</section>
+<!-- End poster -->
+
+
+<!-- BibTeX citation -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <div class="bibtex-header">
+      <h2 class="title">BibTeX</h2>
+      <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+        <i class="fas fa-copy"></i>
+        <span class="copy-text">Copy</span>
+      </button>
+    </div>
+    <pre id="bibtex-code"><code>@inproceedings{lee-etal-2026-speakersleuth,
+    title = "{S}peaker{S}leuth: Can Large Audio-Language Models Judge Speaker Consistency across Multi-turn Dialogues?",
+    author = "Lee, Jonggeun  and
+      Pyo, Junseong  and
+      Seo, Gyuhyeon  and
+      Jo, Yohan",
+    editor = "Liakata, Maria  and
+      Moreira, Viviane P.  and
+      Zhang, Jiajun  and
+      Jurgens, David",
+    booktitle = "Proceedings of the 64th Annual Meeting of the {A}ssociation for {C}omputational {L}inguistics (Volume 1: Long Papers)",
+    month = jul,
+    year = "2026",
+    address = "San Diego, California, United States",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2026.acl-long.944/",
+    pages = "20612--20636",
+    ISBN = "979-8-89176-390-6",
+    abstract = "Large Audio-Language Models (LALMs) as judges have emerged as a prominent approach for evaluating speech generation quality, yet their ability to assess speaker consistency across multi-turn dialogues remains unexplored. We present \textbf{SpeakerSleuth}, a benchmark evaluating whether LALMs can reliably judge speaker consistency across multi-turn dialogues through three tasks reflecting real-world requirements. We construct 1,818 human-verified evaluation instances across four diverse datasets spanning synthetic and real speech, with controlled acoustic difficulty. Evaluating twelve widely-used LALMs, we find that models struggle to reliably detect acoustic inconsistencies. For instance, given audio samples of the same speaker{'}s turns, some models overpredict inconsistency, whereas others are overly lenient. Models further struggle to identify the exact turns that are problematic. When other interlocutors' turns are provided as textual context, performance degrades dramatically as models prioritize textual coherence over acoustic cues, failing to detect even obvious gender switches for a speaker. On the other hand, models perform substantially better in comparing and ranking acoustic variants, demonstrating inherent acoustic discrimination capabilities. These findings expose a significant bias in LALMs: they tend to prioritize text over acoustics, revealing fundamental modality imbalances that need to be addressed to build reliable audio-language judges. Our code and data are available at \url{https://github.com/holi-lab/SpeakerSleuth}."
+}</code></pre>
+  </div>
+</section>
+<!-- End BibTeX citation -->
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </main>
+</body>
+</html>
